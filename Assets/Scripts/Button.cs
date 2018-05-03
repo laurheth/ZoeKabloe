@@ -5,6 +5,7 @@ using UnityEngine;
 public class Button : MonoBehaviour {
     public GameObject PushMe;
     public GameObject Door;
+    public bool IsSticky;
     ButtonDoor doorscript;
     Material ButtonLight;
     bool ison;
@@ -30,6 +31,7 @@ public class Button : MonoBehaviour {
 
 	private void OnTriggerExit(Collider other)
 	{
+        if (IsSticky) { return; }
         if (ison)
         {
             doorscript.AddButton(-1);

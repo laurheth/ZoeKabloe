@@ -18,8 +18,10 @@ public class Zoe : MonoBehaviour {
     Animator anim;
     Quaternion batrot;
     Collider coll;
+    Renderer rend;
     int doublejump;
     bool dooring;
+    bool dmgcooldown;
     public float doorspeed;
     float targx;
     public float swingforce;
@@ -27,6 +29,8 @@ public class Zoe : MonoBehaviour {
     float distToGround;
 	// Use this for initialization
 	void Start () {
+        rend = GetComponentInChildren<SkinnedMeshRenderer>();
+        dmgcooldown = false;
         //Estrogen = 2;
         doublejump = 2;
         coll = GetComponent<Collider>();
@@ -38,7 +42,11 @@ public class Zoe : MonoBehaviour {
         batrot = Bat.transform.localRotation;
         batrb = Bat.GetComponent<Rigidbody>();
 
+        transform.position = new Vector3(GameManager.instance.startx,
+                                         transform.position.y, transform.position.z);
+
         distToGround = coll.bounds.extents.y;
+        GameManager.instance.UpdateHP(HitPoints, MaxHitPoints);
 	}
 
     bool IsGrounded() {
@@ -52,6 +60,7 @@ public class Zoe : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //float rotation;
+        if (HitPoints <= 0) { return; }
         Vector3 forwardforce;
         float hx = Input.GetAxis("Vertical");
         float vx = Input.GetAxis("Horizontal");
@@ -146,13 +155,47 @@ public class Zoe : MonoBehaviour {
                         if (other.GetComponent<Slime>()!=null) {
                             other.GetComponent<Slime>().GetHit(2);
                         }
+                        else if (other.GetComponent<Driver>()!=null) {
+                            other.GetComponent<Driver>().GetHit(2);
+                        }
                     }
                 }
             }
         }
     }
 
-	public void GetHit(int dmg) {
+    public void GetHit(int dmg)
+    {
+        if (dmgcooldown) { return; }
         HitPoints -= dmg;
+        GameManager.instance.UpdateHP(HitPoints, MaxHitPoints);
+        StartCoroutine(DamageFlash());
+        if (HitPoints <= 0)
+        {
+            rb.constraints = RigidbodyConstraints.None;
+            anim.SetFloat("Forward", 0f);
+            rb.AddTorque(new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), Random.Range(-3, 3)), ForceMode.VelocityChange);
+            StartCoroutine(Die());
+        }
+    }
+
+    IEnumerator DamageFlash() {
+        float timepassed = 0f;
+        dmgcooldown = true;
+        rend.material.EnableKeyword("_EMISSION");
+        while (timepassed<1f) {
+            timepassed += Time.deltaTime;
+            rend.material.SetColor("_EmissionColor", (1 - timepassed) * Color.red);
+            yield return null;
+        }
+        rend.material.SetColor("_EmissionColor", Color.black);
+        rend.material.DisableKeyword("_EMISSION");
+        dmgcooldown = false;
+    }
+
+    IEnumerator Die() {
+        yield return new WaitForSeconds(2);
+        GameManager.instance.startx = (int)transform.position.x;
+        GameManager.instance.Restart();
     }
 }

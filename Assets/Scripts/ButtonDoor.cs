@@ -7,17 +7,17 @@ public class ButtonDoor : MonoBehaviour {
     // Use this for initialization
     public int ButtonsNeeded;
     public float OpenHeight;
-    int buttons;
-    float height;
-    Rigidbody rb;
-	void Start () {
+    protected int buttons;
+    protected float height;
+    protected Rigidbody rb;
+	protected virtual void Start () {
         buttons = 0;
         height = 0;
         rb = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected virtual void Update () {
         if (buttons>=ButtonsNeeded && height<OpenHeight) {
             height += Time.deltaTime;
             rb.MovePosition(rb.position + Vector3.up * Time.deltaTime);
