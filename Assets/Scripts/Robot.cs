@@ -77,6 +77,7 @@ public class Robot : MonoBehaviour {
         GameManager.instance.UpdateBossBar(HitPoints);
         if (HitPoints<=0 && active) {
             active = false;
+            animator.SetBool("Forward", false);
             animator.SetBool("Dead",true);
             StartCoroutine(driver.Die());
             foreach (Damager dmgr in damagers) {
