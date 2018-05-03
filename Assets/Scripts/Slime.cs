@@ -5,6 +5,7 @@ using UnityEngine;
 public class Slime : MonoBehaviour {
 
     GameObject player;
+    GameObject cophat;
     Zoe playerscript;
     public int HitPoints;
     public float Speed;
@@ -34,6 +35,7 @@ public class Slime : MonoBehaviour {
 
     public void DoInit()
     {
+        cophat = transform.Find("Armature/Head/cophat").gameObject;
         invisibletime = 100f;
         //visible = false;
         dead = false;
@@ -131,6 +133,8 @@ public class Slime : MonoBehaviour {
     IEnumerator Die() {
         //GetComponent<ParticleSystem>().Play();
         Vector3 size = transform.localScale;
+        cophat.transform.SetParent(null);
+        cophat.GetComponent<Rigidbody>().isKinematic = false;
         for (int i = 0; i < 150;i++) {
             if (i < 100)
             {

@@ -19,17 +19,22 @@ public class Button : MonoBehaviour {
         return ison;
     }
 
-	private void OnTriggerEnter(Collider other)
+	private void OnTriggerStay(Collider other)
 	{
+        if (!ison) {
+            doorscript.AddButton();
+        }
         ison = true;
-        doorscript.AddButton();
         ButtonLight.EnableKeyword("_EMISSION");
 	}
 
 	private void OnTriggerExit(Collider other)
 	{
+        if (ison)
+        {
+            doorscript.AddButton(-1);
+        }
         ison = false;
-        doorscript.AddButton(-1);
         ButtonLight.DisableKeyword("_EMISSION");
 	}
 }
