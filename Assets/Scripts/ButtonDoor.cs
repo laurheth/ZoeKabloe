@@ -10,9 +10,11 @@ public class ButtonDoor : MonoBehaviour {
     protected int buttons;
     protected float height;
     protected Rigidbody rb;
+    Vector3 baseposition;
 	protected virtual void Start () {
         buttons = 0;
         height = 0;
+        baseposition = transform.position + Vector3.zero;
         rb = GetComponent<Rigidbody>();
 	}
 	
@@ -24,7 +26,13 @@ public class ButtonDoor : MonoBehaviour {
         }
         else if (buttons<ButtonsNeeded && height>0) {
             height -= 3*Time.deltaTime;
-            rb.MovePosition(rb.position - 3*Vector3.up * Time.deltaTime);
+
+            if (height<=0) {
+                rb.MovePosition(baseposition);
+            }
+            else {
+                rb.MovePosition(rb.position - 3 * Vector3.up * Time.deltaTime);
+            }
         }
 	}
 

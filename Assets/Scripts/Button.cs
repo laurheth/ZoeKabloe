@@ -22,6 +22,8 @@ public class Button : MonoBehaviour {
 
 	private void OnTriggerStay(Collider other)
 	{
+        //if (other.tag == "Door") { return; }
+        //Debug.Log(other.name);
         if (!ison) {
             doorscript.AddButton();
         }

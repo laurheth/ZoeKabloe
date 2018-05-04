@@ -93,6 +93,10 @@ public class GameManager : MonoBehaviour {
     }
 
     public void UpdateBossBar(int hp) {
+        if (hp<=0) {
+            DeactivateBossBar();
+            return;
+        }
         float size = (185f * hp) / bosshp;
         if (size < 0) { size = 0f; }
         BossHealthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(size, 10);

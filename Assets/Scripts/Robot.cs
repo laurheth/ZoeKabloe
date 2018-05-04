@@ -16,6 +16,7 @@ public class Robot : MonoBehaviour {
     Zoe playerscript;
     Vector3 targrot;
     Rigidbody rb;
+    public GameObject Door;
 	// Use this for initialization
 	void Start () {
         damagers = new List<Damager>();
@@ -38,7 +39,7 @@ public class Robot : MonoBehaviour {
 	void Update () {
         if (HitPoints <= 0) { return; }
         if (!active) {
-            if (Mathf.Abs(Player.transform.position.x-transform.position.x)<15) {
+            if (Mathf.Abs(Player.transform.position.x-transform.position.x)<10) {
                 active = true;
                 GameManager.instance.ActivateBossBar("MECHA NIMBY",HitPoints);
             }
@@ -83,6 +84,7 @@ public class Robot : MonoBehaviour {
             foreach (Damager dmgr in damagers) {
                 dmgr.active = false;
             }
+            Door.GetComponent<ButtonDoor>().AddButton(1);
         }
     }
 }

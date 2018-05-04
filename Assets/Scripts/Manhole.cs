@@ -34,13 +34,13 @@ public class Manhole : MonoBehaviour {
     }
 
     IEnumerator SpawnSlime() {
-        GameObject newslime = Instantiate(SlimeObj,transform.position+2*Vector3.down,Quaternion.identity);
+        GameObject newslime = Instantiate(SlimeObj,transform.position-2*transform.up,transform.rotation);
         Slime slimescript = newslime.GetComponent<Slime>();
         slimescript.DoInit();
         slimescript.ForceMotion(true);
         float height = 0;
         while (height<2) {
-            newslime.transform.position += Vector3.up * Time.deltaTime;
+            newslime.transform.position += transform.up * Time.deltaTime;
             height += Time.deltaTime;
             yield return null;
         }
@@ -81,7 +81,7 @@ public class Manhole : MonoBehaviour {
                 Debug.Log(other);
                 if (other.GetComponent<Rigidbody>() != null)
                 {
-                    other.GetComponent<Rigidbody>().AddForce(12*Vector3.up+5*transform.right,ForceMode.VelocityChange);
+                    other.GetComponent<Rigidbody>().AddForce(12*transform.up+5*transform.right,ForceMode.VelocityChange);
                 }
 
             }
