@@ -16,36 +16,47 @@ public class ButtonDoor : MonoBehaviour {
         buttons = 0;
         //height = 0;
         baseposition = transform.position + Vector3.zero;
-        OpenPosition = baseposition + OpenHeight * Vector3.up;
+        OpenPosition = baseposition + OpenHeight * transform.up;
         rb = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
 	protected virtual void Update () {
-        if (buttons>=ButtonsNeeded && transform.position.y<OpenPosition.y) {
-            
+        if (buttons>=ButtonsNeeded) {
+            rb.MovePosition(Vector3.MoveTowards(transform.position, OpenPosition, Time.deltaTime));
             //height += Time.deltaTime;
-            if (transform.position.y+Time.deltaTime>OpenPosition.y)
+            /*if (Vector3.Dot( transform.position+transform.up*Time.deltaTime - OpenPosition,transform.up ) <0 )
             {
                 rb.MovePosition(OpenPosition);
             }
             else {
-                rb.MovePosition(rb.position + Vector3.up * Time.deltaTime);
-            }
+                rb.MovePosition(rb.position + transform.up * Time.deltaTime);
+            }*/
         }
-        else if (buttons<ButtonsNeeded && transform.position.y > baseposition.y) {
+        else if (buttons<ButtonsNeeded) {
+            rb.MovePosition(Vector3.MoveTowards(transform.position, baseposition, 3*Time.deltaTime));
             //height -= 3*Time.deltaTime;
 
-            if (transform.position.y-Time.deltaTime<baseposition.y) {
+            /*if (Vector3.Dot(transform.position - transform.up * Time.deltaTime - baseposition, -transform.up) < 0) {
                 rb.MovePosition(baseposition);
             }
             else {
                 rb.MovePosition(rb.position - 3 * Vector3.up * Time.deltaTime);
-            }
+            }*/
         }
 	}
 
     public void AddButton(int addone=1) {
         buttons += addone;
     }
+
+	private void OnTriggerEnter(Collider other)
+	{
+        buttons++;
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+        buttons--;
+	}
 }
