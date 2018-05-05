@@ -62,6 +62,9 @@ public class Drone : MonoBehaviour {
 
         horizpos[1] = 0;
         Driver.transform.rotation = Quaternion.LookRotation(horizpos);
+
+        if (horizpos.magnitude < 5) { targetpos -= Vector3.up * 4; }
+
         for (int i = 0; i < 4;i++) {
 
             // Vertical position
@@ -89,18 +92,21 @@ public class Drone : MonoBehaviour {
             targrotrates[i] -= 10 * rotratechange * Vector3.Dot(Vector3.up, (transform.rotation * pos[i]));
 
             if (rotrb[i].velocity[1]>mainrb.velocity[1]+0.5) {
-                targrotrates[i] -= rotratechange;
+                targrotrates[i] -= 2*rotratechange;
             }
             else if (rotrb[i].velocity[1] < mainrb.velocity[1] - 0.5){
-                targrotrates[i] += rotratechange;
+                targrotrates[i] += 2*rotratechange;
             }
 
             // Horizontal position
 
             if (Vector3.Dot(horizpos.normalized, mainrb.velocity) < 4 || horizpos.magnitude>10)
             {
-                targrotrates[i] -= rotratechange * Vector3.Dot(horizpos.normalized, (transform.rotation * pos[i]));
-            }
+                targrotrates[i] -= 2*rotratechange * Vector3.Dot(horizpos.normalized, (transform.rotation * pos[i]));
+            }/*
+            else {
+                targrotrates[i] += rotratechange * Vector3.Dot(mainrb.velocity.normalized, (transform.rotation * pos[i]))/4f;
+            }*/
 
             // Adjust to target rotation rate
             if (rotrates[i] > targrotrates[i]) { rotrates[i] -= rotratechange; }

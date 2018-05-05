@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 54738860041462758}
   - component: {fileID: 65280627929290622}
   - component: {fileID: 114602215078034476}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: FriendSlime
   m_TagString: Friend
   m_Icon: {fileID: 0}

@@ -1702,7 +1702,7 @@ Prefab:
     - target: {fileID: 224775313430484706, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -13.5
       objectReference: {fileID: 0}
     - target: {fileID: 224775313430484706, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
@@ -1712,7 +1712,7 @@ Prefab:
     - target: {fileID: 224775313430484706, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 224879079434247114, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
@@ -1722,7 +1722,7 @@ Prefab:
     - target: {fileID: 224879079434247114, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 42
       objectReference: {fileID: 0}
     - target: {fileID: 1481701139048394, guid: 2be4a6a66f08b429cac16a9a0ee270f9, type: 2}
       propertyPath: m_Name
@@ -3901,7 +3901,7 @@ GameObject:
   - component: {fileID: 752334004}
   - component: {fileID: 752334003}
   - component: {fileID: 752334002}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: FourthWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7308,7 +7308,7 @@ Prefab:
     - target: {fileID: 224775313430484706, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -31.5
       objectReference: {fileID: 0}
     - target: {fileID: 224775313430484706, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
@@ -7318,7 +7318,7 @@ Prefab:
     - target: {fileID: 224775313430484706, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 53
       objectReference: {fileID: 0}
     - target: {fileID: 224879079434247114, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
@@ -7328,7 +7328,7 @@ Prefab:
     - target: {fileID: 224879079434247114, guid: 2be4a6a66f08b429cac16a9a0ee270f9,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 78
       objectReference: {fileID: 0}
     - target: {fileID: 1481701139048394, guid: 2be4a6a66f08b429cac16a9a0ee270f9, type: 2}
       propertyPath: m_Name

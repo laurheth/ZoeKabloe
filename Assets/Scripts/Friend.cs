@@ -31,15 +31,15 @@ public class Friend : MonoBehaviour {
         //Vector3 forward = transform.forward;
         //forward = Vector3.Slerp(forward, Vector3.left, Time.deltaTime);
         rb.MoveRotation(Quaternion.RotateTowards(transform.rotation,
-                                                 Quaternion.LookRotation(Vector3.left),
+                                                 Quaternion.LookRotation(Vector3.back),
                                                  90*Time.deltaTime));
         rb.MovePosition(rb.position+2*transform.forward * Time.deltaTime);
-        if (time>4) {
+        if (time>14) {
             animator.SetTrigger("Jump");
             rb.AddForce(Vector3.up * 20 * Time.deltaTime, ForceMode.VelocityChange);
         }
 
-        if (time>10) {
+        if (time>20) {
             Destroy(gameObject);
         }
 	}
