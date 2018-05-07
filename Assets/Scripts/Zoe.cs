@@ -12,6 +12,7 @@ public class Zoe : MonoBehaviour {
     public float Jump;
     public GameObject Bat;
     public GameObject Camera;
+    public float maxspeed;
     Vector3 campos;
     Rigidbody rb;
     Rigidbody batrb;
@@ -21,6 +22,7 @@ public class Zoe : MonoBehaviour {
     Renderer rend;
     int doublejump;
     bool dooring;
+    bool endgame;
     bool dmgcooldown;
     public float doorspeed;
     float targx;
@@ -29,6 +31,7 @@ public class Zoe : MonoBehaviour {
     float distToGround;
 	// Use this for initialization
 	void Start () {
+        endgame = false;
         rend = GetComponentInChildren<SkinnedMeshRenderer>();
         dmgcooldown = false;
         //Estrogen = 2;
@@ -61,6 +64,9 @@ public class Zoe : MonoBehaviour {
 	void Update () {
         //float rotation;
         if (HitPoints <= 0) { return; }
+        if (rb.velocity.magnitude>maxspeed) {
+            rb.velocity = maxspeed * rb.velocity.normalized;
+        }
         Vector3 forwardforce;
         float hx = Input.GetAxis("Vertical");
         float vx = Input.GetAxis("Horizontal");
@@ -68,7 +74,13 @@ public class Zoe : MonoBehaviour {
         forwardforce = new Vector3(vx * Speed * Time.deltaTime,0,
                                    hx * Speed * Time.deltaTime);
 
-        campos[0] = transform.position[0];
+        if (!endgame)
+        {
+            campos[0] = transform.position[0];
+        }
+        else {
+            campos[0] = 201;
+        }
         Camera.transform.position = campos;
 
         if (dooring) {
@@ -158,6 +170,9 @@ public class Zoe : MonoBehaviour {
                         else if (other.GetComponent<Driver>()!=null) {
                             other.GetComponent<Driver>().GetHit(2);
                         }
+                        else if (other.GetComponent<Landlord>()!=null) {
+                            other.GetComponent<Landlord>().GetHit(2);
+                        }
                     }
                 }
             }
@@ -168,6 +183,7 @@ public class Zoe : MonoBehaviour {
     {
         if (dmgcooldown) { return; }
         HitPoints -= dmg;
+        Debug.Log(dmg);
         GameManager.instance.UpdateHP(HitPoints, MaxHitPoints);
         StartCoroutine(DamageFlash());
         if (HitPoints <= 0)

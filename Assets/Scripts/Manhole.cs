@@ -10,14 +10,20 @@ public class Manhole : MonoBehaviour {
     public float RotateSpeed;
     float TimeSinceOpen;
     public GameObject hinge;
+    bool lidopen;
     Rigidbody hingerb;
 	// Use this for initialization
 	void Start () {
+        lidopen = false;
         TimeSinceOpen = 0;
         hingerb = hinge.GetComponent<Rigidbody>();
         Player = GameObject.FindGameObjectWithTag("Player");
 	}
 	
+    public void AddButton() {
+        TimeSinceOpen = Period+0.5f;
+    }
+
 	// Update is called once per frame
 	void Update () {
         if (Mathf.Abs(transform.position.x - Player.transform.position.x) > 10) { return; }
@@ -28,9 +34,13 @@ public class Manhole : MonoBehaviour {
 	}
 
     void OpenLid() {
-        Launch();
-        StartCoroutine(RotateCover());
-        StartCoroutine(SpawnSlime());
+        if (!lidopen)
+        {
+            lidopen = true;
+            Launch();
+            StartCoroutine(RotateCover());
+            StartCoroutine(SpawnSlime());
+        }
     }
 
     IEnumerator SpawnSlime() {
@@ -68,6 +78,7 @@ public class Manhole : MonoBehaviour {
             }
         }
         hingerb.MoveRotation(startrot);
+        lidopen = false;
     }
 
     void Launch()

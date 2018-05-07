@@ -5,6 +5,7 @@ using UnityEngine;
 public class Drone : MonoBehaviour {
 
     GameObject[] Rotors;
+    Rotor[] rotorscripts;
     Rigidbody[] rotrb;
     Rigidbody mainrb;
     //Quaternion[] rots;
@@ -13,117 +14,175 @@ public class Drone : MonoBehaviour {
     Vector3 horizpos;
     GameObject Player;
     GameObject Driver;
+    Landlord landlord;
+    public GameObject Door;
     public float forceperrot;
     public float rotratechange;
+    public float[] XLimits;
+    public int HitPoints;
+    public int dmg;
     float baserot;
     float minrot;
     float maxrot;
     float[] rotpos;
     float[] rotrates;
     float[] targrotrates;
+    float[] chgperrot;
+    ParticleSystem[] particles;
     bool active;
+    bool alive;
 	// Use this for initialization
 	void Start () {
+        alive = true;
         active = false;
         Player = GameObject.FindGameObjectWithTag("Player");
         Driver = transform.Find("LandLord").gameObject;
+        landlord = Driver.GetComponent<Landlord>();
+        landlord.drone = this;
         //rotationrate = 15;
         mainrb = GetComponent<Rigidbody>();
         baserot = mainrb.mass * Physics.gravity.magnitude/(4f*forceperrot);
         minrot = baserot / 1.2f;
         maxrot = baserot * 1.2f;
         Rotors = new GameObject[4];
+        rotorscripts = new Rotor[4];
         //rots = new Quaternion[4];
         pos = new Vector3[4];
         rotrates = new float[4];
         targrotrates = new float[4];
+        chgperrot = new float[4];
+        particles = new ParticleSystem[4];
         rotpos = new float[4];
         rotrb = new Rigidbody[4];
         for (int i = 1; i < 5;i++) {
             Rotors[i - 1] = transform.Find("Armature/Arm" + i + "/Rotor" + i).gameObject;
+            rotorscripts[i - 1] = Rotors[i - 1].GetComponent<Rotor>();
+            rotorscripts[i - 1].Damage = dmg;
+            //Rotors[i - 1].GetComponent<Rotor>().Damage = dmg;
             rotrb[i - 1] = Rotors[i - 1].GetComponent<Rigidbody>();
             //rots[i - 1] = Rotors[i - 1].transform.rotation;
             pos[i - 1] = Rotors[i - 1].transform.position-transform.position;
             rotrates[i - 1] = baserot;//rotationrate;
-            targrotrates[i - 1] = baserot;
+            targrotrates[i - 1] = 0;//baserot;
+            chgperrot[i - 1] = rotratechange;
+            particles[i - 1] = Rotors[i - 1].GetComponent<ParticleSystem>();
         }
 	}
-	
-	// Update is called once per frame
-	void LateUpdate () {
-        if (!active) { 
-            if (Mathf.Abs(Player.transform.position.x-transform.position.x)<15) {
-                active = true;
-            }
-            return;
-        }
-        targetpos = Player.transform.position+Vector3.up*5;
-        horizpos = targetpos-transform.position;
 
-        horizpos[1] = 0;
-        Driver.transform.rotation = Quaternion.LookRotation(horizpos);
-
-        if (horizpos.magnitude < 5) { targetpos -= Vector3.up * 4; }
-
-        for (int i = 0; i < 4;i++) {
-
-            // Vertical position
-            if (targetpos.y > transform.position.y && mainrb.velocity[1]<1)
+    // Update is called once per frame
+    void LateUpdate()
+    {
+        if (alive)
+        {
+            if (!active)
             {
-                targrotrates[i] = maxrot;
+                if (Mathf.Abs(Player.transform.position.x - transform.position.x) < 15)
+                {
+                    GameManager.instance.ActivateBossBar("THE LANDLORD", HitPoints);
+                    active = true;
+                }
+                return;
             }
-            else if ( targetpos.y < transform.position.y && mainrb.velocity[1] > -1 ) {
-                targrotrates[i] = minrot;
-            }
-            else {
-                if (mainrb.velocity[1] > 0.5)
+            targetpos = Player.transform.position + Vector3.up * 5;
+            if (targetpos[0] < XLimits[0]) { targetpos[0] = XLimits[0]; }
+            if (targetpos[0] > XLimits[1]) { targetpos[0] = XLimits[1]; }
+            horizpos = targetpos - transform.position;
+
+            horizpos[1] = 0;
+            Driver.transform.rotation = Quaternion.LookRotation(horizpos);
+
+            if (horizpos.magnitude < 5) { targetpos -= Vector3.up * 4; }
+
+            if (targetpos[0] < XLimits[0]) { targetpos[0] = XLimits[0]; horizpos[0] = XLimits[0]; }
+            if (targetpos[0] > XLimits[1]) { targetpos[0] = XLimits[1]; horizpos[0] = XLimits[1]; }
+
+            for (int i = 0; i < 4; i++)
+            {
+
+                if (rotrates[i] > minrot/1.2f)
+                {
+                    rotorscripts[i].active = true;
+                }
+                else
+                {
+                    rotorscripts[i].active = false;
+                }
+
+                // Vertical position
+                if (targetpos.y > transform.position.y && mainrb.velocity[1] < 1)
+                {
+                    targrotrates[i] = maxrot;
+                }
+                else if (targetpos.y < transform.position.y && mainrb.velocity[1] > -1)
                 {
                     targrotrates[i] = minrot;
                 }
-                else if (mainrb.velocity[1] < -0.5) {
-                    targrotrates[i] = maxrot;
+                else
+                {
+                    if (mainrb.velocity[1] > 0.5)
+                    {
+                        targrotrates[i] = minrot;
+                    }
+                    else if (mainrb.velocity[1] < -0.5)
+                    {
+                        targrotrates[i] = maxrot;
+                    }
+                    else
+                    {
+                        targrotrates[i] = baserot;
+                    }
                 }
-                else {
-                    targrotrates[i] = baserot;
+
+                // Stability?
+                if (transform.up.y > 0)
+                {
+                    targrotrates[i] -= 10 * rotratechange * Vector3.Dot(Vector3.up, (transform.rotation * pos[i]));
                 }
-            }
+                else
+                {
+                    targrotrates[i] += 10 * rotratechange * Vector3.Dot(Vector3.up, (transform.rotation * pos[i]));
+                }
 
-            // Stability?
-            targrotrates[i] -= 10 * rotratechange * Vector3.Dot(Vector3.up, (transform.rotation * pos[i]));
+                if (rotrb[i].velocity[1] > mainrb.velocity[1] + 0.5)
+                {
+                    targrotrates[i] -= 2 * rotratechange;
+                }
+                else if (rotrb[i].velocity[1] < mainrb.velocity[1] - 0.5)
+                {
+                    targrotrates[i] += 2 * rotratechange;
+                }
 
-            if (rotrb[i].velocity[1]>mainrb.velocity[1]+0.5) {
-                targrotrates[i] -= 2*rotratechange;
-            }
-            else if (rotrb[i].velocity[1] < mainrb.velocity[1] - 0.5){
-                targrotrates[i] += 2*rotratechange;
-            }
+                // Horizontal position
 
-            // Horizontal position
-
-            if (Vector3.Dot(horizpos.normalized, mainrb.velocity) < 4 || horizpos.magnitude>10)
-            {
-                targrotrates[i] -= 2*rotratechange * Vector3.Dot(horizpos.normalized, (transform.rotation * pos[i]));
-            }/*
+                if (Vector3.Dot(horizpos.normalized, mainrb.velocity) < 4 || horizpos.magnitude > 10)
+                {
+                    targrotrates[i] -= 2 * rotratechange * Vector3.Dot(horizpos.normalized, (transform.rotation * pos[i]));
+                }/*
             else {
                 targrotrates[i] += rotratechange * Vector3.Dot(mainrb.velocity.normalized, (transform.rotation * pos[i]))/4f;
             }*/
+            }
+        }
+        // Adjust to target rotation rate
+        for (int i = 0; i < 4; i++)
+        {
+            if (rotrates[i] > targrotrates[i]) { rotrates[i] -= chgperrot[i]; }
+            else { rotrates[i] += chgperrot[i]; }
 
-            // Adjust to target rotation rate
-            if (rotrates[i] > targrotrates[i]) { rotrates[i] -= rotratechange; }
-            else { rotrates[i] += rotratechange; }
             // Enforce limits
-            if (rotrates[i] > maxrot) { rotrates[i] = maxrot; }
-            else if (rotrates[i] < minrot) { rotrates[i] = minrot; }
+            /*if (rotrates[i] > maxrot) { rotrates[i] = maxrot; }
+            else if (rotrates[i] < minrot) { rotrates[i] = minrot; }*/
 
             //rotrates[i] = rotationrate;
-            rotpos[i] += rotrates[i] * Time.deltaTime;
+            rotpos[i] += Mathf.Max(0, rotrates[i]) * Time.deltaTime;
             //rots[i] *= Quaternion.Euler(-rotrates[i]*Time.deltaTime,0,0);
             //Rotors[i].transform.rotation = rots[i];Quaternion.Euler(Vector3.left*rotpos[i])*
-            rotrb[i].MoveRotation(transform.rotation* Quaternion.Euler(-Vector3.forward*90)*Quaternion.Euler(Vector3.left * rotpos[i]));
-            rotrb[i].MovePosition(transform.rotation*pos[i] + transform.position);
+            rotrb[i].MoveRotation(transform.rotation * Quaternion.Euler(-Vector3.forward * 90) * Quaternion.Euler(Vector3.left * rotpos[i]));
+            rotrb[i].MovePosition(transform.rotation * pos[i] + transform.position);
         }
 
-	}
+
+    }
 
 	private void FixedUpdate()
 	{
@@ -131,8 +190,48 @@ public class Drone : MonoBehaviour {
         {
             for (int i = 0; i < 4; i++)
             {
-                mainrb.AddForceAtPosition(transform.up * rotrates[i] * forceperrot, transform.position + transform.rotation * pos[i]);
+                mainrb.AddForceAtPosition(transform.up * Mathf.Max(0,rotrates[i]) * forceperrot, transform.position + transform.rotation * pos[i]);
             }
         }
 	}
+
+    public void HitRotor(Rotor rotor, Collision collision) {
+        for (int i = 0; i < 4;i++) {
+            if (rotorscripts[i]==rotor) {
+                rotrates[i] -= rotratechange*collision.rigidbody.mass*10;
+                if (rotrates[i]<-rotratechange*(4/Time.deltaTime)) {
+                    rotrates[i] = -rotratechange * (4 / Time.deltaTime);
+                }
+                chgperrot[i] /= 1.1f;
+                var emission=particles[i].emission;
+                emission.rateOverTime = new ParticleSystem.MinMaxCurve(emission.rateOverTime.constant+0.5f);
+                break;
+            }
+        }
+    }
+
+    public void GetHit(int damage) {
+        HitPoints -= damage;
+        /*minrot /= 1.1f;
+        maxrot *= 1.1f;*/
+        GameManager.instance.UpdateBossBar(HitPoints);
+        if (HitPoints <= 0 && alive)
+        {
+            Door.GetComponent<ButtonDoor>().AddButton();
+            alive = false;
+            rotratechange /= 20f;
+            for (int i = 0; i < 4;i++) {
+                targrotrates[i] = -10;
+                chgperrot[i] = rotratechange;
+            }
+
+            StartCoroutine(landlord.Die());
+            foreach (Rotor dmgr in rotorscripts)
+            {
+                dmgr.active = false;
+                dmgr.Damage = 0;
+            }
+            //Door.GetComponent<ButtonDoor>().AddButton(1);
+        }
+    }
 }

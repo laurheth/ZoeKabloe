@@ -12,7 +12,7 @@ public class Damager : MonoBehaviour {
         active = true;
 	}
 
-	private void OnCollisionStay(Collision collision)
+	protected void OnCollisionStay(Collision collision)
 	{
         Debug.Log("Hit");
         Debug.Log(active);
