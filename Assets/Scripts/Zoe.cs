@@ -147,6 +147,11 @@ public class Zoe : MonoBehaviour {
                 coll.enabled = false;
                 rb.isKinematic = true;
             }
+            if (collision.gameObject.tag == "EndDoor") {
+                endgame = true;
+                transform.position = new Vector3(197, 0, -5);
+                GameManager.instance.CheckRescued();
+            }
         }
         /*if (Vector3.Dot(collision.contacts[0].normal,Vector3.up)<0) {
             isgrounded = true;

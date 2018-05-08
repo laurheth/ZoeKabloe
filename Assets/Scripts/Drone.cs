@@ -78,7 +78,7 @@ public class Drone : MonoBehaviour {
             {
                 if (Mathf.Abs(Player.transform.position.x - transform.position.x) < 15)
                 {
-                    GameManager.instance.ActivateBossBar("THE LANDLORD", HitPoints);
+                    GameManager.instance.ActivateBossBar("THE SLIMELORD", HitPoints);
                     active = true;
                 }
                 return;
@@ -145,11 +145,11 @@ public class Drone : MonoBehaviour {
 
                 if (rotrb[i].velocity[1] > mainrb.velocity[1] + 0.5)
                 {
-                    targrotrates[i] -= 2 * rotratechange;
+                    targrotrates[i] -= 2*rotratechange;
                 }
                 else if (rotrb[i].velocity[1] < mainrb.velocity[1] - 0.5)
                 {
-                    targrotrates[i] += 2 * rotratechange;
+                    targrotrates[i] += 2*rotratechange;
                 }
 
                 // Horizontal position

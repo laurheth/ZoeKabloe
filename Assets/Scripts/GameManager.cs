@@ -102,4 +102,15 @@ public class GameManager : MonoBehaviour {
         BossHealthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(size, 10);
     }
 
+    public void CheckRescued() {
+        GameObject[] friends = GameObject.FindGameObjectsWithTag("Friend");
+        foreach (GameObject thisfriend in friends) {
+            if (thisfriend.GetComponent<FreeFriend>()!=null) {
+                if (!IsFreed(thisfriend.GetComponent<FreeFriend>().FriendID)) {
+                    Destroy(thisfriend); // Remove non-free friends from the brunch place :(
+                }
+            }
+        }
+    }
+
 }

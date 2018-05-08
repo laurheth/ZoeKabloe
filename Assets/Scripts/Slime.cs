@@ -35,7 +35,13 @@ public class Slime : MonoBehaviour {
 
     public void DoInit()
     {
-        cophat = transform.Find("Armature/Head/cophat").gameObject;
+        if (transform.Find("Armature/Head/cophat") != null)
+        {
+            cophat = transform.Find("Armature/Head/cophat").gameObject;
+        }
+        else {
+            cophat = null;
+        }
         invisibletime = 100f;
         //visible = false;
         dead = false;
@@ -116,7 +122,7 @@ public class Slime : MonoBehaviour {
         rb.AddForce((Vector3.up + transform.forward) * JumpHeight, ForceMode.VelocityChange);
     }
 
-	private void OnCollisionEnter(Collision collision)
+	protected void OnCollisionEnter(Collision collision)
 	{
         // Hit the player!
         if (collision.gameObject.tag=="Player") {
@@ -133,8 +139,11 @@ public class Slime : MonoBehaviour {
     IEnumerator Die() {
         //GetComponent<ParticleSystem>().Play();
         Vector3 size = transform.localScale;
-        cophat.transform.SetParent(null);
-        cophat.GetComponent<Rigidbody>().isKinematic = false;
+        if (cophat != null)
+        {
+            cophat.transform.SetParent(null);
+            cophat.GetComponent<Rigidbody>().isKinematic = false;
+        }
         for (int i = 0; i < 150;i++) {
             if (i < 100)
             {
