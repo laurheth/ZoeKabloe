@@ -19,6 +19,7 @@ public class Drone : MonoBehaviour {
     public float forceperrot;
     public float rotratechange;
     public float[] XLimits;
+    //public float[] ZLimits;
     public int HitPoints;
     public int dmg;
     float baserot;
@@ -42,6 +43,7 @@ public class Drone : MonoBehaviour {
         //rotationrate = 15;
         mainrb = GetComponent<Rigidbody>();
         baserot = mainrb.mass * Physics.gravity.magnitude/(4f*forceperrot);
+        rotratechange = baserot/2f;
         minrot = baserot / 1.2f;
         maxrot = baserot * 1.2f;
         Rotors = new GameObject[4];
@@ -91,7 +93,7 @@ public class Drone : MonoBehaviour {
             horizpos[1] = 0;
             Driver.transform.rotation = Quaternion.LookRotation(horizpos);
 
-            if (horizpos.magnitude < 5) { targetpos -= Vector3.up * 4; }
+            //if (horizpos.magnitude < 5) { targetpos -= Vector3.up * 4; }
 
             if (targetpos[0] < XLimits[0]) { targetpos[0] = XLimits[0]; horizpos[0] = XLimits[0]; }
             if (targetpos[0] > XLimits[1]) { targetpos[0] = XLimits[1]; horizpos[0] = XLimits[1]; }
@@ -109,21 +111,21 @@ public class Drone : MonoBehaviour {
                 }
 
                 // Vertical position
-                if (targetpos.y > transform.position.y && mainrb.velocity[1] < 1)
+                if (targetpos.y > transform.position.y && mainrb.velocity[1] < 0.5)
                 {
                     targrotrates[i] = maxrot;
                 }
-                else if (targetpos.y < transform.position.y && mainrb.velocity[1] > -1)
+                else if (targetpos.y < transform.position.y && mainrb.velocity[1] > -0.5)
                 {
                     targrotrates[i] = minrot;
                 }
                 else
                 {
-                    if (mainrb.velocity[1] > 0.5)
+                    if (mainrb.velocity[1] > 0.25)
                     {
                         targrotrates[i] = minrot;
                     }
-                    else if (mainrb.velocity[1] < -0.5)
+                    else if (mainrb.velocity[1] < -0.25)
                     {
                         targrotrates[i] = maxrot;
                     }
@@ -134,30 +136,41 @@ public class Drone : MonoBehaviour {
                 }
 
                 // Stability?
-                if (transform.up.y > 0)
+                float anglefloat = Vector3.Dot(Vector3.up, (transform.rotation * pos[i]));
+                float velfloat = Vector3.Cross(mainrb.angularVelocity, (transform.rotation * pos[i]))[1];
+                //if (stabfloat > 0 && rotrb[i].velocity[1] < 0) { stabfloat = 1; }
+                //if (stabfloat < 0 && rotrb[i].velocity[1] > 0) { stabfloat = 1; }
+
+                targrotrates[i] -= rotratechange * anglefloat * 0.3f+rotratechange*velfloat*0.5f;// - mainrb.angularVelocity
+
+                /*if (transform.up.y > 0)
                 {
-                    targrotrates[i] -= 10 * rotratechange * Vector3.Dot(Vector3.up, (transform.rotation * pos[i]));
+                    targrotrates[i] -= rotratechange*stabfloat*0.3f;
                 }
                 else
                 {
-                    targrotrates[i] += 10 * rotratechange * Vector3.Dot(Vector3.up, (transform.rotation * pos[i]));
-                }
+                    targrotrates[i] += rotratechange * stabfloat * 0.3f;//10 * rotratechange * stabfloat;
+                }*/
 
-                if (rotrb[i].velocity[1] > mainrb.velocity[1] + 0.5)
+                //targrotrates[i] += rotratechange * (rotrb[i].velocity[1])*0.5f;
+
+                //Debug.Log(targrotrates);
+                /*if (rotrb[i].velocity[1] > mainrb.velocity[1] + 0.5)
                 {
                     targrotrates[i] -= 2*rotratechange;
                 }
                 else if (rotrb[i].velocity[1] < mainrb.velocity[1] - 0.5)
                 {
                     targrotrates[i] += 2*rotratechange;
-                }
+                }*/
 
                 // Horizontal position
 
                 if (Vector3.Dot(horizpos.normalized, mainrb.velocity) < 4 || horizpos.magnitude > 10)
                 {
-                    targrotrates[i] -= 2 * rotratechange * Vector3.Dot(horizpos.normalized, (transform.rotation * pos[i]));
-                }/*
+                    targrotrates[i] -= 0.1f*rotratechange * Vector3.Dot(horizpos.normalized, (transform.rotation * pos[i]));
+                }
+                /*
             else {
                 targrotrates[i] += rotratechange * Vector3.Dot(mainrb.velocity.normalized, (transform.rotation * pos[i]))/4f;
             }*/
@@ -166,8 +179,19 @@ public class Drone : MonoBehaviour {
         // Adjust to target rotation rate
         for (int i = 0; i < 4; i++)
         {
-            if (rotrates[i] > targrotrates[i]) { rotrates[i] -= chgperrot[i]; }
-            else { rotrates[i] += chgperrot[i]; }
+            if (rotrates[i] > targrotrates[i]) {
+                rotrates[i] -= chgperrot[i]*Time.deltaTime;
+                if (rotrates[i] < targrotrates[i]) {
+                    rotrates[i] = targrotrates[i];
+                }
+            }
+            else {
+                rotrates[i] += chgperrot[i]*Time.deltaTime;
+                if (rotrates[i] > targrotrates[i])
+                {
+                    rotrates[i] = targrotrates[i];
+                }
+            }
 
             // Enforce limits
             /*if (rotrates[i] > maxrot) { rotrates[i] = maxrot; }
@@ -198,9 +222,9 @@ public class Drone : MonoBehaviour {
     public void HitRotor(Rotor rotor, Collision collision) {
         for (int i = 0; i < 4;i++) {
             if (rotorscripts[i]==rotor) {
-                rotrates[i] -= rotratechange*collision.rigidbody.mass*10;
-                if (rotrates[i]<-rotratechange*(4/Time.deltaTime)) {
-                    rotrates[i] = -rotratechange * (4 / Time.deltaTime);
+                rotrates[i] -= rotratechange*collision.rigidbody.mass;
+                if (rotrates[i]<-rotratechange*4) {
+                    rotrates[i] = -rotratechange * 4;
                 }
                 chgperrot[i] /= 1.1f;
                 var emission=particles[i].emission;
@@ -234,4 +258,5 @@ public class Drone : MonoBehaviour {
             //Door.GetComponent<ButtonDoor>().AddButton(1);
         }
     }
+
 }
