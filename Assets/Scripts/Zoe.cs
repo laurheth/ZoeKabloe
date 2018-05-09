@@ -64,6 +64,7 @@ public class Zoe : MonoBehaviour {
 	void Update () {
         //float rotation;
         if (HitPoints <= 0) { return; }
+        if (transform.position.y < -20) { GetHit(1000); }
         if (rb.velocity.magnitude>maxspeed) {
             rb.velocity = maxspeed * rb.velocity.normalized;
         }
