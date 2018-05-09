@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class StartMenu : MonoBehaviour {
     public GameObject Fade2Black;
     public GameObject PlotText;
+    public GameObject LoadingText;
     bool plotting;
     Image fade2black;
     Color fadecolor;
@@ -14,10 +15,12 @@ public class StartMenu : MonoBehaviour {
     string plot;
     public float letterspersecond;
     float seconds;
+    bool loading;
     int numletters;
     // Use this for initialization
     void Start()
     {
+        loading = false;
         plotting = false;
         fade2black = Fade2Black.GetComponent<Image>();
         fadecolor = fade2black.color;
@@ -43,10 +46,32 @@ public class StartMenu : MonoBehaviour {
                 numletters = Mathf.CeilToInt(letterspersecond * seconds);
                 if (numletters >= plot.Length) { numletters = plot.Length; }
                 plottext.text = plot.Substring(0, numletters);
-                if (Input.anyKey) {
-                    SceneManager.LoadScene("Game");
+                if (Input.anyKey && !loading)
+                {
+                    numletters = plot.Length;
+                    seconds = plot.Length / letterspersecond+1;
+                    StartCoroutine(Loading(LoadingText));
                 }
             }
         }
 	}
+
+    IEnumerator Loading(GameObject ldtxt) {
+        ldtxt.SetActive(true);
+        Text loadtext = ldtxt.GetComponent<Text>();
+        string thetext = loadtext.text;
+        int minpos = loadtext.text.Length - 3;
+        int showtil=minpos;
+        float timeelapsed=0;
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Game");
+        while (!asyncLoad.isDone) {
+            timeelapsed += Time.deltaTime;
+            if (timeelapsed>0.5) {
+                showtil++;
+                if (showtil > loadtext.text.Length) { showtil = minpos; }
+                loadtext.text = thetext.Substring(0, showtil);
+            }
+            yield return null;
+        }
+    }
 }
