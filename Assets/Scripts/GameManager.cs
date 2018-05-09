@@ -10,9 +10,11 @@ public class GameManager : MonoBehaviour {
     GameObject Player;
     public GameObject HealthBar;
     public GameObject FriendText;
+    public GameObject Cover;
     Text friendtext;
     RectTransform hptransform;
     public int startx=-30;
+    public float transitionspeed;
     int deaths;
     int friends;
     int bosshp;
@@ -54,6 +56,42 @@ public class GameManager : MonoBehaviour {
         //BossName.SetActive(false);
         DeactivateBossBar();
         //Debug.Log(startpos);
+
+        StartCoroutine(OpenScreen());
+    }
+
+    public IEnumerator OpenScreen(bool open=true) {
+        float res = GetComponent<RectTransform>().sizeDelta[1];
+        RectTransform cover = Cover.GetComponent<RectTransform>();
+        Debug.Log(res);
+        float openrate = (res / 800f) * transitionspeed;
+        int sign;
+        float target;
+
+        if (!open) { 
+            sign = -1;
+            target = 0;
+            cover.sizeDelta = new Vector2(cover.sizeDelta[0], -res);
+        }
+        else {
+            sign = 1;
+            target = -res;
+            cover.sizeDelta = new Vector2(cover.sizeDelta[0], 0);
+        }
+        if (!open)
+        {
+            Cover.GetComponent<Image>().enabled = true;
+        }
+        while (sign*cover.sizeDelta[1]>target) {
+            cover.sizeDelta = new Vector2(cover.sizeDelta[0],cover.sizeDelta[1]-sign*openrate*Time.deltaTime);
+            //Debug.Log(cover.sizeDelta);
+            yield return null;
+        }
+        if (open)
+        {
+            Cover.GetComponent<Image>().enabled = false;
+        }
+        //StartCoroutine(OpenScreen(!open));
     }
 
     public void UpdateHP(int hp, int maxhp)

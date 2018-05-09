@@ -217,6 +217,7 @@ public class Zoe : MonoBehaviour {
 
     IEnumerator Die() {
         yield return new WaitForSeconds(2);
+        yield return GameManager.instance.OpenScreen(false);
         GameManager.instance.startx = (int)transform.position.x;
         GameManager.instance.Restart();
     }

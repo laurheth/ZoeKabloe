@@ -125,9 +125,13 @@ public class Slime : MonoBehaviour {
 	protected void OnCollisionEnter(Collision collision)
 	{
         // Hit the player!
-        if (collision.gameObject.tag=="Player") {
-            playerscript.GetHit(Damage);
-            Jump();
+        if (!dead)
+        {
+            if (collision.gameObject.tag == "Player")
+            {
+                playerscript.GetHit(Damage);
+                Jump();
+            }
         }
 	}
 
@@ -144,6 +148,7 @@ public class Slime : MonoBehaviour {
             cophat.transform.SetParent(null);
             cophat.GetComponent<Rigidbody>().isKinematic = false;
         }
+        Damage = 0;
         for (int i = 0; i < 150;i++) {
             if (i < 100)
             {
