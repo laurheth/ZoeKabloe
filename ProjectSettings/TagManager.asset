@@ -11,6 +11,7 @@ TagManager:
   - Friend
   - DroneOkay
   - EndDoor
+  - Crate
   layers:
   - Default
   - TransparentFX

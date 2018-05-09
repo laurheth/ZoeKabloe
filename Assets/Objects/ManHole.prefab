@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 264a6e2b0246b4b5fb38b3fc1eabb317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Period: 10
+  Period: 20
   Player: {fileID: 0}
   SlimeObj: {fileID: 1423544433777812, guid: 78efda98be49749809a110a56673d041, type: 2}
   RotateSpeed: 360

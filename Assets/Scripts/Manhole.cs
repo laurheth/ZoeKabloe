@@ -10,14 +10,17 @@ public class Manhole : MonoBehaviour {
     public float RotateSpeed;
     float TimeSinceOpen;
     public GameObject hinge;
+    BoxCollider covercoll;
     bool lidopen;
     Rigidbody hingerb;
 	// Use this for initialization
 	void Start () {
+        covercoll = transform.Find("Hinge/Cover").gameObject.GetComponent<BoxCollider>();
         lidopen = false;
         TimeSinceOpen = 0;
         hingerb = hinge.GetComponent<Rigidbody>();
         Player = GameObject.FindGameObjectWithTag("Player");
+        covercoll.enabled = false;
 	}
 	
     public void AddButton() {
@@ -71,12 +74,14 @@ public class Manhole : MonoBehaviour {
                 hingerb.MoveRotation(targrot);
                 yield return null;
             }
+            covercoll.enabled = true;
             currentrot = 0;
             if (j < 0)
             {
                 yield return new WaitForSeconds(2);
             }
         }
+        covercoll.enabled = false;
         hingerb.MoveRotation(startrot);
         lidopen = false;
     }
@@ -101,7 +106,7 @@ public class Manhole : MonoBehaviour {
 
 	private void OnTriggerStay(Collider other)
 	{
-        if (other.tag=="Player") {
+        if (other.tag=="Player" || other.tag=="Crate") {
             TimeSinceOpen += Time.deltaTime * 2;   
         }
 	}

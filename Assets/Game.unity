@@ -14908,7 +14908,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1480575152263510, guid: 054b8299cdfb74433b3bf14f48a7371b, type: 2}
       propertyPath: m_Name
-      value: ManHole (1)
+      value: ManHole
       objectReference: {fileID: 0}
     - target: {fileID: 4443358481487188, guid: 054b8299cdfb74433b3bf14f48a7371b, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
