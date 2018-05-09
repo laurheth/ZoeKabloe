@@ -151,4 +151,10 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public IEnumerator RunEpilogue() {
+        yield return new WaitForSeconds(20);
+        yield return OpenScreen(false);
+        SceneManager.LoadScene("Epilogue");
+    }
+
 }

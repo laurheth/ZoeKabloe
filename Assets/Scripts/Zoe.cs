@@ -152,6 +152,7 @@ public class Zoe : MonoBehaviour {
                 endgame = true;
                 transform.position = new Vector3(197, 0, -5);
                 GameManager.instance.CheckRescued();
+                StartCoroutine(GameManager.instance.RunEpilogue());
             }
         }
         /*if (Vector3.Dot(collision.contacts[0].normal,Vector3.up)<0) {

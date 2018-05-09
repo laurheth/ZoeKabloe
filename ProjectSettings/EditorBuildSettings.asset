@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game.unity
     guid: 806bdc0ec9a904c9f86dfdc83c8e1add
+  - enabled: 1
+    path: Assets/Epilogue.unity
+    guid: 0b2bd06de3ebd45c880e217c53276919
