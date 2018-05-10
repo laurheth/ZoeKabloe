@@ -133,7 +133,10 @@ public class Epilogue : MonoBehaviour {
             case 0:
                 if (numfree > 0)
                 {
-                    toreturn = Zoe + " and her " + numfree + " friends finally had their delicious brunch"+
+                    toreturn = Zoe + " and her ";
+                    if (numfree == 1) { toreturn += "one friend"; }
+                    else { toreturn += numfree + " friends"; }
+                    toreturn+=" finally had their delicious brunch"+
                         " of strawberry pie and slime pie! It was a magical day and a magical time" +
                         " and everyone was very, very happy.";
                 }

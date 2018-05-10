@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
     Text friendtext;
     RectTransform hptransform;
     public int startx=-30;
+    public int[] CheckPoints;
     public float transitionspeed;
     int deaths;
     int friends;
@@ -155,6 +156,16 @@ public class GameManager : MonoBehaviour {
         yield return new WaitForSeconds(20);
         yield return OpenScreen(false);
         SceneManager.LoadScene("Epilogue");
+    }
+
+    public void SetStartx(int newsx) {
+        // No moving backwards
+        if (newsx < startx) { return; }
+        // Step forward through checkpoints until highest one below current position
+        // Does not assume sorting
+        for (int i = 0; i < CheckPoints.Length;i++) {
+            if (CheckPoints[i] < newsx && CheckPoints[i]>startx) { startx = CheckPoints[i]; }
+        }
     }
 
 }

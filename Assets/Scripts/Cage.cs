@@ -14,8 +14,8 @@ public class Cage : ButtonDoor {
 	}
 	
 	// Update is called once per frame
-	protected override void Update () {
-        base.Update();
+	protected override void FixedUpdate () {
+        base.FixedUpdate();
         if (buttons >= ButtonsNeeded && !released) {
             released = true;
             if (prisonerscript != null)

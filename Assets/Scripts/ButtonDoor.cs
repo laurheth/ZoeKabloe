@@ -12,7 +12,9 @@ public class ButtonDoor : MonoBehaviour {
     //protected float height;
     protected Rigidbody rb;
     Vector3 baseposition;
+    bool ison;
 	protected virtual void Start () {
+        ison = false;
         buttons = 0;
         //height = 0;
         baseposition = transform.position + Vector3.zero;
@@ -21,9 +23,9 @@ public class ButtonDoor : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	protected virtual void Update () {
+	protected virtual void FixedUpdate () {
         if (buttons>=ButtonsNeeded) {
-            rb.MovePosition(Vector3.MoveTowards(transform.position, OpenPosition, Time.deltaTime));
+            rb.MovePosition(Vector3.MoveTowards(transform.position, OpenPosition, Time.fixedDeltaTime));
             //height += Time.deltaTime;
             /*if (Vector3.Dot( transform.position+transform.up*Time.deltaTime - OpenPosition,transform.up ) <0 )
             {
@@ -34,7 +36,7 @@ public class ButtonDoor : MonoBehaviour {
             }*/
         }
         else if (buttons<ButtonsNeeded) {
-            rb.MovePosition(Vector3.MoveTowards(transform.position, baseposition, 3*Time.deltaTime));
+            rb.MovePosition(Vector3.MoveTowards(transform.position, baseposition, 3*Time.fixedDeltaTime));
             //height -= 3*Time.deltaTime;
 
             /*if (Vector3.Dot(transform.position - transform.up * Time.deltaTime - baseposition, -transform.up) < 0) {
@@ -50,13 +52,23 @@ public class ButtonDoor : MonoBehaviour {
         buttons += addone;
     }
 
-	private void OnTriggerEnter(Collider other)
-	{
+    private void OnTriggerEnter(Collider other)
+    {
+        /*if (other.gameObject.tag=="Crate" && other.gameObject.GetComponent<Rigidbody>() != null) {
+            other.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(transform.position.x, 0, transform.position.z) * Time.deltaTime, ForceMode.Acceleration);
+        }*/
         buttons++;
-	}
+        /*if (other.gameObject.tag == "Crate")
+        {
+            other.transform.parent = transform;
+        }*/
+    }
 
-	private void OnTriggerExit(Collider other)
-	{
+    private void OnTriggerExit(Collider other)
+    {
         buttons--;
-	}
+        /*if (other.gameObject.tag=="Crate") {
+            other.transform.parent = null;
+        }*/
+    }
 }
