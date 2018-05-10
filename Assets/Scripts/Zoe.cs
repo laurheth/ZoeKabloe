@@ -8,12 +8,16 @@ public class Zoe : MonoBehaviour {
     public int MaxEstrogen;
     public int Estrogen;
     public float Speed;
+    public float Acceleration;
+    float speed2;
     public float RotationSpeed;
     public float Jump;
     public GameObject Bat;
     public GameObject Camera;
     public float maxspeed;
     Vector3 campos;
+    Vector3 horizvel;
+    Vector3 forwardforce;
     Rigidbody rb;
     Rigidbody batrb;
     Animator anim;
@@ -26,11 +30,17 @@ public class Zoe : MonoBehaviour {
     bool dmgcooldown;
     public float doorspeed;
     float targx;
+    //float currentspeed2;
+    float currentspeed;
+    float jumpspeed;
     public float swingforce;
     //bool isgrounded;
     float distToGround;
+    bool jumping;
 	// Use this for initialization
 	void Start () {
+        jumpspeed = 0;
+        //speed2 = Speed * Speed;
         endgame = false;
         rend = GetComponentInChildren<SkinnedMeshRenderer>();
         dmgcooldown = false;
@@ -62,18 +72,35 @@ public class Zoe : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        //jumping = false;
         //float rotation;
         if (HitPoints <= 0) { return; }
         if (transform.position.y < -20) { GetHit(1000); }
         if (rb.velocity.magnitude>maxspeed) {
             rb.velocity = maxspeed * rb.velocity.normalized;
         }
-        Vector3 forwardforce;
+
         float hx = Input.GetAxis("Vertical");
         float vx = Input.GetAxis("Horizontal");
+        /*if (rb.velocity.magnitude>0.1) {
+            forwardforce = new Vector3(rb.velocity[0],0,rb.velocity[2]);
+            currentspeed = forwardforce.magnitude;
+            forwardforce = forwardforce.normalized;
+            rb.velocity = new Vector3(0, rb.velocity[1], 0);
+            //
+        }*/
         //rotation = Input.GetAxis("Horizontal") * RotationSpeed * Time.deltaTime;
-        forwardforce = new Vector3(vx * Speed * Time.deltaTime,0,
-                                   hx * Speed * Time.deltaTime);
+
+
+
+        if (currentspeed < 0.01)
+        {
+            forwardforce = new Vector3(vx, 0,
+                                       hx).normalized;
+        }
+        else {
+            forwardforce = Vector3.RotateTowards(forwardforce, new Vector3(vx, 0, hx).normalized, (Time.deltaTime*RotationSpeed * 3.14f / 360f),0);
+        }
 
         if (!endgame)
         {
@@ -100,12 +127,13 @@ public class Zoe : MonoBehaviour {
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.X) && (IsGrounded() || doublejump>0 ))
+        if (Input.GetKeyDown(KeyCode.X) && (IsGrounded() || doublejump > 0))
         {
             doublejump--;
             anim.SetTrigger("JumpButton");
-            Debug.Log("JumpButton");
-            rb.AddForce((Vector3.up+forwardforce.normalized/2f) * Jump, ForceMode.VelocityChange);
+            //Debug.Log("JumpButton");
+            rb.AddForce((Vector3.up+forwardforce/2f) * Jump, ForceMode.VelocityChange);
+            //jumping = true;
             //forwardforce *= 1.5f;
         }
 
@@ -114,20 +142,46 @@ public class Zoe : MonoBehaviour {
             anim.SetFloat("Forward",1f);
             Quaternion targdir = Quaternion.LookRotation(forwardforce, Vector3.up)*Quaternion.Euler(0,90f,0);
             rb.MoveRotation(targdir);
+            if (currentspeed<Speed) {
+                //if (currentspeed +)
+                currentspeed += Acceleration*Time.deltaTime;
+                if (currentspeed > Speed) { currentspeed = Speed; }
+            }
+            else {
+                currentspeed -= (Acceleration/5) * Time.deltaTime;
+                if (currentspeed < Speed) { currentspeed = Speed; }
+            }
         }
         else {
-
+            //currentspeed = 0;
+            if (currentspeed > 0)
+            {
+                currentspeed -= Acceleration*Time.deltaTime;
+                if (currentspeed < 0) { currentspeed = 0; }
+            }
+            else { currentspeed = 0; }
             anim.SetFloat("Forward", 0f);
         }
 
         if (Input.GetKeyDown(KeyCode.Z) && !anim.GetCurrentAnimatorStateInfo(0).IsName("Swing")) {
             anim.SetTrigger("SwingButton");
             //HitInFront();
-            Debug.Log("SwingButton");
+            //Debug.Log("SwingButton");
             BatAttack();
         }
+        rb.MovePosition(transform.position + currentspeed*forwardforce*Time.deltaTime);
+        /*if (!jumping)
+        {
+            rb.MovePosition(transform.position + forwardforce);
+        }
+        else
+        {*/
+        /*if (jumping && Mathf.Abs(rb.velocity[1]) < 0.001 && IsGrounded())
+        {
 
-        rb.MovePosition(transform.position + forwardforce);
+            jumping = false;
+        }*/
+        //}*/
 	}
 
 	public void OnCollisionEnter(Collision collision)
@@ -167,7 +221,7 @@ public class Zoe : MonoBehaviour {
             foreach (Collider other in colliders) {
                 if (other.gameObject.tag != "Player")
                 {
-                    Debug.Log(other.gameObject.name);
+                    //Debug.Log(other.gameObject.name);
                     if (other.GetComponent<Rigidbody>() != null)
                     {
                         other.GetComponent<Rigidbody>().AddForce(swingforce * (-transform.right+Vector3.up/2),ForceMode.Impulse);
@@ -190,7 +244,7 @@ public class Zoe : MonoBehaviour {
     {
         if (dmgcooldown) { return; }
         HitPoints -= dmg;
-        Debug.Log(dmg);
+        //Debug.Log(dmg);
         GameManager.instance.UpdateHP(HitPoints, MaxHitPoints);
         StartCoroutine(DamageFlash());
         if (HitPoints <= 0)

@@ -211,6 +211,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PushMe: {fileID: 1234003603418248}
   Door: {fileID: 0}
+  OnColor: {r: 0, g: 1, b: 1, a: 1}
+  OffColor: {r: 1, g: 0, b: 0, a: 1}
+  IsSticky: 0
 --- !u!135 &135447756841215236
 SphereCollider:
   m_ObjectHideFlags: 1

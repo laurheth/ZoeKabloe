@@ -5,6 +5,8 @@ using UnityEngine;
 public class Button : MonoBehaviour {
     public GameObject PushMe;
     public GameObject Door;
+    public Color OnColor;
+    public Color OffColor;
     //public GameObject manhole;
     public bool IsSticky;
     ButtonDoor doorscript;
@@ -19,6 +21,7 @@ public class Button : MonoBehaviour {
         if (doorscript==null) {
             manholescript = Door.GetComponent<Manhole>();
         }
+        ButtonLight.SetColor("_EmissionColor", OffColor);
 	}
 
     public bool IsOn() {
@@ -40,7 +43,7 @@ public class Button : MonoBehaviour {
             }
         }
         ison = true;
-        ButtonLight.EnableKeyword("_EMISSION");
+        ButtonLight.SetColor("_EmissionColor", OnColor);
 	}
 
 	private void OnTriggerExit(Collider other)
@@ -54,6 +57,6 @@ public class Button : MonoBehaviour {
             }
         }
         ison = false;
-        ButtonLight.DisableKeyword("_EMISSION");
+        ButtonLight.SetColor("_EmissionColor", OffColor);//DisableKeyword("_EMISSION");
 	}
 }
