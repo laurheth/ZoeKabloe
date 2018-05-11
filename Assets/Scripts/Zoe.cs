@@ -169,7 +169,7 @@ public class Zoe : MonoBehaviour {
             //Debug.Log("SwingButton");
             BatAttack();
         }
-        rb.MovePosition(transform.position + currentspeed*forwardforce*Time.deltaTime);
+
         /*if (!jumping)
         {
             rb.MovePosition(transform.position + forwardforce);
@@ -182,6 +182,11 @@ public class Zoe : MonoBehaviour {
             jumping = false;
         }*/
         //}*/
+	}
+
+	private void FixedUpdate()
+	{
+        rb.MovePosition(transform.position + currentspeed * forwardforce * Time.fixedDeltaTime);
 	}
 
 	public void OnCollisionEnter(Collision collision)
