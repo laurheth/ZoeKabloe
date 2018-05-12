@@ -140,7 +140,7 @@ public class Zoe : MonoBehaviour {
         if (Mathf.Abs(hx) > 0.05 || Mathf.Abs(vx) > 0.05)
         {
             anim.SetFloat("Forward",1f);
-            Quaternion targdir = Quaternion.LookRotation(forwardforce, Vector3.up)*Quaternion.Euler(0,90f,0);
+            Quaternion targdir = Quaternion.LookRotation(forwardforce, Vector3.up);//*Quaternion.Euler(0,90f,0);
             rb.MoveRotation(targdir);
             if (currentspeed<Speed) {
                 //if (currentspeed +)
@@ -221,7 +221,7 @@ public class Zoe : MonoBehaviour {
 
     private void BatAttack() {
         Collider[] colliders = Physics.OverlapSphere(
-            transform.position + Vector3.up - transform.right/2, 1f);
+            transform.position + Vector3.up + transform.forward/2, 1f);
         if (colliders.Length>0) {
             foreach (Collider other in colliders) {
                 if (other.gameObject.tag != "Player")
@@ -229,7 +229,7 @@ public class Zoe : MonoBehaviour {
                     //Debug.Log(other.gameObject.name);
                     if (other.GetComponent<Rigidbody>() != null)
                     {
-                        other.GetComponent<Rigidbody>().AddForce(swingforce * (-transform.right+Vector3.up/2),ForceMode.Impulse);
+                        other.GetComponent<Rigidbody>().AddForce(swingforce * (transform.forward+Vector3.up/2),ForceMode.Impulse);
                         if (other.GetComponent<Slime>()!=null) {
                             other.GetComponent<Slime>().GetHit(2);
                         }
