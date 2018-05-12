@@ -12,6 +12,7 @@ public class StartMenu : MonoBehaviour {
     Image fade2black;
     Color fadecolor;
     Text plottext;
+    float quithold;
     string plot;
     public float letterspersecond;
     float seconds;
@@ -31,6 +32,15 @@ public class StartMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (Input.GetKey(KeyCode.Escape)) {
+            quithold += Time.deltaTime;
+            if (quithold>2) {
+                Application.Quit();
+            }
+        }
+        else {
+            quithold = 0;
+        }
         if (Input.anyKey && !plotting) {
             plotting = true;
             //SceneManager.LoadScene("Game");

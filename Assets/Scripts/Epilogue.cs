@@ -20,6 +20,7 @@ public class Epilogue : MonoBehaviour {
     Text thetext;
     int numfree;
     string Zoe;
+    float quithold;
 	// Use this for initialization
 	void Start () {
         writing = false;
@@ -169,4 +170,20 @@ public class Epilogue : MonoBehaviour {
 
         return toreturn;
     }
+
+	private void Update()
+	{
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            quithold += Time.deltaTime;
+            if (quithold > 2)
+            {
+                Application.Quit();
+            }
+        }
+        else
+        {
+            quithold = 0;
+        }
+	}
 }

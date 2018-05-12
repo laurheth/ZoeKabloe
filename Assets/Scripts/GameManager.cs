@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
     public float transitionspeed;
     int deaths;
     int friends;
+    float quithold;
     int bosshp;
     //List<GameObject> FriendList;
     List<int> FriendInds;
@@ -167,5 +168,23 @@ public class GameManager : MonoBehaviour {
             if (CheckPoints[i] < newsx && CheckPoints[i]>startx) { startx = CheckPoints[i]; }
         }
     }
+
+	private void Update()
+	{
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            quithold += Time.deltaTime;
+            //Debug.Log(quithold);
+            if (quithold > 2)
+            {
+                //Debug.Log("Quit?");
+                Application.Quit();
+            }
+        }
+        else
+        {
+            quithold = 0;
+        }
+	}
 
 }
