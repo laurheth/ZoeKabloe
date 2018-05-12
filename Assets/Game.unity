@@ -2780,6 +2780,11 @@ Prefab:
       propertyPath: OffColor.b
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 65094765183502252, guid: e143ad5ca089c4c288c898f2f46441af,
+        type: 2}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e143ad5ca089c4c288c898f2f46441af, type: 2}
   m_IsPrefabParent: 0
@@ -4573,6 +4578,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ButtonsNeeded: 1
   OpenHeight: 4.8
+  ignoretriggers: 0
 --- !u!54 &444793727
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4687,7 +4693,12 @@ Prefab:
     - target: {fileID: 114020132159814662, guid: 81f9b5047d81140f189276cc4bcd99cd,
         type: 2}
       propertyPath: OpenHeight
-      value: 6
+      value: 5.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 114020132159814662, guid: 81f9b5047d81140f189276cc4bcd99cd,
+        type: 2}
+      propertyPath: ignoretriggers
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 81f9b5047d81140f189276cc4bcd99cd, type: 2}
@@ -4763,7 +4774,7 @@ Prefab:
     - target: {fileID: 114735272826487492, guid: e143ad5ca089c4c288c898f2f46441af,
         type: 2}
       propertyPath: IsSticky
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1234003603418248, guid: e143ad5ca089c4c288c898f2f46441af, type: 2}
       propertyPath: m_Layer
@@ -14203,34 +14214,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 67
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &819178030
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 819178031}
-  m_Layer: 0
-  m_Name: BoxPusher
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &819178031
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 819178030}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 568614764}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &823889499
 Prefab:
   m_ObjectHideFlags: 0
@@ -14402,6 +14385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ButtonsNeeded: 1
   OpenHeight: 4.6
+  ignoretriggers: 0
 --- !u!54 &847031657
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14766,6 +14750,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ButtonsNeeded: 1
   OpenHeight: 5
+  ignoretriggers: 0
 --- !u!54 &893121026
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17626,6 +17611,47 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7b49b201bbd3a43fb931ea366d6830d6, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1346379420
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1346379421}
+  - component: {fileID: 1346379423}
+  m_Layer: 17
+  m_Name: Boxpusher
+  m_TagString: BoxPusher
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1346379421
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1346379420}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 568614764}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1346379423
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1346379420}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2, z: 1}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1348495800 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1737786805546894, guid: 81f9b5047d81140f189276cc4bcd99cd,
@@ -26166,6 +26192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ButtonsNeeded: 1
   OpenHeight: 5
+  ignoretriggers: 0
 --- !u!1001 &1967981272
 Prefab:
   m_ObjectHideFlags: 0
@@ -27102,6 +27129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ButtonsNeeded: 2
   OpenHeight: 5
+  ignoretriggers: 0
 --- !u!1001 &2046505502
 Prefab:
   m_ObjectHideFlags: 0
@@ -27514,7 +27542,7 @@ Prefab:
     - target: {fileID: 114735272826487492, guid: e143ad5ca089c4c288c898f2f46441af,
         type: 2}
       propertyPath: IsSticky
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1234003603418248, guid: e143ad5ca089c4c288c898f2f46441af, type: 2}
       propertyPath: m_Layer

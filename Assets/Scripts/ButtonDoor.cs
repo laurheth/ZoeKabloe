@@ -13,6 +13,7 @@ public class ButtonDoor : MonoBehaviour {
     protected Rigidbody rb;
     Vector3 baseposition;
     bool ison;
+    public bool ignoretriggers;
 	protected virtual void Start () {
         ison = false;
         buttons = 0;
@@ -57,6 +58,7 @@ public class ButtonDoor : MonoBehaviour {
         /*if (other.gameObject.tag=="Crate" && other.gameObject.GetComponent<Rigidbody>() != null) {
             other.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(transform.position.x, 0, transform.position.z) * Time.deltaTime, ForceMode.Acceleration);
         }*/
+        if (ignoretriggers) { return; }
         buttons++;
         /*if (other.gameObject.tag == "Crate")
         {
@@ -66,6 +68,7 @@ public class ButtonDoor : MonoBehaviour {
 
     private void OnTriggerExit(Collider other)
     {
+        if (ignoretriggers) { return; }
         buttons--;
         /*if (other.gameObject.tag=="Crate") {
             other.transform.parent = null;

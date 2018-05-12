@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 65440419332498402}
   - component: {fileID: 23782666856993672}
   - component: {fileID: 54149634932010674}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Crate
   m_TagString: Crate
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!65 &65440419332498402
 BoxCollider:
   m_ObjectHideFlags: 1

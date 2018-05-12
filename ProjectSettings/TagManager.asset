@@ -12,6 +12,7 @@ TagManager:
   - DroneOkay
   - EndDoor
   - Crate
+  - BoxPusher
   layers:
   - Default
   - TransparentFX
@@ -30,8 +31,8 @@ TagManager:
   - Drone
   - FourthWall
   - Friend
-  - 
-  - 
+  - BoxPusher
+  - Box
   - 
   - 
   - 
