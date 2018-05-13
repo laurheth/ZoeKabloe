@@ -79,6 +79,7 @@ public class StartMenu : MonoBehaviour {
             if (timeelapsed>0.5) {
                 showtil++;
                 if (showtil > loadtext.text.Length) { showtil = minpos; }
+                timeelapsed -= 0.5f;
                 loadtext.text = thetext.Substring(0, showtil);
             }
             yield return null;
