@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 54738860041462758}
   - component: {fileID: 65280627929290622}
   - component: {fileID: 114602215078034476}
+  - component: {fileID: 82176830733604984}
   m_Layer: 16
   m_Name: FriendSlime
   m_TagString: Friend
@@ -522,6 +523,86 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.4, z: 1}
   m_Center: {x: 0, y: 0.7, z: 0}
+--- !u!82 &82176830733604984
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1583212545289336}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95679682461962674
 Animator:
   serializedVersion: 3
@@ -552,6 +633,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FriendIndex: 0
   isfree: 0
+  freesound: {fileID: 8300000, guid: 5f337f764574c4f62825fa2a4d55586b, type: 3}
 --- !u!114 &114976823329712306
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -565,6 +647,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ButtonsNeeded: 1
   OpenHeight: 5
+  ignoretriggers: 0
   prisoner: {fileID: 1583212545289336}
 --- !u!120 &120607658876139918
 LineRenderer:

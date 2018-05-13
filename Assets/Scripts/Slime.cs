@@ -24,6 +24,13 @@ public class Slime : MonoBehaviour {
     float waitforabit;
     bool dead;
     bool initialized;
+    bool awakened;
+
+    AudioSource audioSource;
+    public AudioClip awakesnd;
+    public AudioClip hopsnd;
+    public AudioClip diesnd;
+
     //bool visible;
     //bool isactive;
 	// Use this for initialization
@@ -35,6 +42,8 @@ public class Slime : MonoBehaviour {
 
     public void DoInit()
     {
+        awakened = false;
+        audioSource = GetComponent<AudioSource>();
         if (transform.Find("Armature/Head/cophat") != null)
         {
             cophat = transform.Find("Armature/Head/cophat").gameObject;
@@ -77,9 +86,14 @@ public class Slime : MonoBehaviour {
             targpos = home;
         }
         else {
+            if (!awakened) {
+                audioSource.PlayOneShot(awakesnd);
+            }
             invisibletime = 0f;
+            awakened = true;
         }
         if (invisibletime>10) {
+            awakened = false;
             return;
         }
         waitforabit -= Time.deltaTime;
@@ -120,6 +134,7 @@ public class Slime : MonoBehaviour {
     void Jump() {
         animator.SetTrigger("Jump");
         rb.AddForce((Vector3.up + transform.forward) * JumpHeight, ForceMode.VelocityChange);
+        audioSource.PlayOneShot(hopsnd);
     }
 
 	protected void OnCollisionEnter(Collision collision)
@@ -142,6 +157,7 @@ public class Slime : MonoBehaviour {
 
     IEnumerator Die() {
         //GetComponent<ParticleSystem>().Play();
+        audioSource.PlayOneShot(diesnd);
         Vector3 size = transform.localScale;
         if (cophat != null)
         {

@@ -37,8 +37,16 @@ public class Zoe : MonoBehaviour {
     //bool isgrounded;
     float distToGround;
     bool jumping;
+
+    // Sounds
+    AudioSource audioSource;
+    public AudioClip swingsnd;
+    public AudioClip hitsnd;
+    public AudioClip diesnd;
+
 	// Use this for initialization
 	void Start () {
+        audioSource = GetComponent<AudioSource>();
         jumpspeed = 0;
         //speed2 = Speed * Speed;
         endgame = false;
@@ -222,6 +230,7 @@ public class Zoe : MonoBehaviour {
     private void BatAttack() {
         Collider[] colliders = Physics.OverlapSphere(
             transform.position + Vector3.up + transform.forward/2, 1f);
+        bool hitsomething = false;
         if (colliders.Length>0) {
             foreach (Collider other in colliders) {
                 if (other.gameObject.tag != "Player")
@@ -229,6 +238,7 @@ public class Zoe : MonoBehaviour {
                     //Debug.Log(other.gameObject.name);
                     if (other.GetComponent<Rigidbody>() != null)
                     {
+                        hitsomething = true;
                         other.GetComponent<Rigidbody>().AddForce(swingforce * (transform.forward+Vector3.up/2),ForceMode.Impulse);
                         if (other.GetComponent<Slime>()!=null) {
                             other.GetComponent<Slime>().GetHit(2);
@@ -243,6 +253,14 @@ public class Zoe : MonoBehaviour {
                 }
             }
         }
+        if (hitsomething)
+        {
+            audioSource.PlayOneShot(hitsnd);
+        }
+        else
+        {
+            audioSource.PlayOneShot(swingsnd);
+        }
     }
 
     public void GetHit(int dmg)
@@ -254,6 +272,7 @@ public class Zoe : MonoBehaviour {
         StartCoroutine(DamageFlash());
         if (HitPoints <= 0)
         {
+            audioSource.PlayOneShot(diesnd);
             rb.constraints = RigidbodyConstraints.None;
             anim.SetFloat("Forward", 0f);
             rb.AddTorque(new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), Random.Range(-3, 3)), ForceMode.VelocityChange);

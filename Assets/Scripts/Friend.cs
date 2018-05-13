@@ -8,8 +8,11 @@ public class Friend : MonoBehaviour {
     float time;
     Animator animator;
     Rigidbody rb;
+    AudioSource audioSource;
+    public AudioClip freesound;
 	// Use this for initialization
 	void Start () {
+        audioSource = GetComponent<AudioSource>();
         time = 0f;
         isfree = false;
         animator = GetComponent<Animator>();
@@ -49,5 +52,6 @@ public class Friend : MonoBehaviour {
         isfree = true;
         transform.SetParent(null);
         rb.isKinematic = false;
+        audioSource.PlayOneShot(freesound);
     }
 }

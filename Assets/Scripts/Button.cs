@@ -13,9 +13,14 @@ public class Button : MonoBehaviour {
     Manhole manholescript;
     Material ButtonLight;
     bool ison;
+
+    AudioSource audioSource;
+    public AudioClip buttonpush;
+
     //bool permaon;
 	// Use this for initialization
 	void Start () {
+        audioSource = GetComponent<AudioSource>();
         ButtonLight = PushMe.GetComponent<Renderer>().material;
         doorscript = Door.GetComponent<ButtonDoor>();
         if (doorscript==null) {
@@ -33,6 +38,10 @@ public class Button : MonoBehaviour {
         //if (other.tag == "Door") { return; }
         //Debug.Log(other.name);
         if (!ison) {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(buttonpush);
+            }
             if (doorscript != null)
             {
                 doorscript.AddButton();

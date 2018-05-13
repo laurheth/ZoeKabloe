@@ -452,6 +452,9 @@ MonoBehaviour:
   JumpHeight: 5
   Damage: 0
   torque: 200
+  awakesnd: {fileID: 0}
+  hopsnd: {fileID: 8300000, guid: 199ebc2ba5a6245ea882440cf7e059ef, type: 3}
+  diesnd: {fileID: 0}
   FriendID: 0
 --- !u!137 &137798487007786490
 SkinnedMeshRenderer:

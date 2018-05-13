@@ -17,8 +17,13 @@ public class Robot : MonoBehaviour {
     Vector3 targrot;
     Rigidbody rb;
     public GameObject Door;
+    AudioSource audioSource;
+    public AudioClip awakensnd;
+    public AudioClip attacksnd;
+    public AudioClip diesnd;
 	// Use this for initialization
 	void Start () {
+        audioSource = GetComponent<AudioSource>();
         damagers = new List<Damager>();
         rb = GetComponent<Rigidbody>();
         foreach (Damager dmgr in GetComponentsInChildren<Damager>())
@@ -42,6 +47,7 @@ public class Robot : MonoBehaviour {
             if (Mathf.Abs(Player.transform.position.x-transform.position.x)<10) {
                 active = true;
                 GameManager.instance.ActivateBossBar("MECHA NIMBY",HitPoints);
+                audioSource.PlayOneShot(awakensnd);
             }
             else {
                 return;
@@ -64,6 +70,7 @@ public class Robot : MonoBehaviour {
             {
                 animator.SetTrigger("Attack2");
             }
+            audioSource.PlayOneShot(attacksnd);
         }
         else {
             animator.SetBool("Forward", true);
@@ -77,6 +84,7 @@ public class Robot : MonoBehaviour {
         HitPoints -= damage;
         GameManager.instance.UpdateBossBar(HitPoints);
         if (HitPoints<=0 && active) {
+            audioSource.PlayOneShot(diesnd);
             active = false;
             animator.SetBool("Forward", false);
             animator.SetBool("Dead",true);

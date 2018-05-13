@@ -32,8 +32,12 @@ public class Drone : MonoBehaviour {
     ParticleSystem[] particles;
     bool active;
     bool alive;
+    AudioSource audioSource;
+    public AudioClip awakensnd;
+    public AudioClip diesnd;
 	// Use this for initialization
 	void Start () {
+        audioSource = GetComponent<AudioSource>();
         alive = true;
         active = false;
         Player = GameObject.FindGameObjectWithTag("Player");
@@ -80,6 +84,7 @@ public class Drone : MonoBehaviour {
             {
                 if (Mathf.Abs(Player.transform.position.x - transform.position.x) < 15)
                 {
+                    audioSource.PlayOneShot(awakensnd);
                     GameManager.instance.ActivateBossBar("THE SLIMELORD", HitPoints);
                     active = true;
                 }
@@ -241,6 +246,7 @@ public class Drone : MonoBehaviour {
         GameManager.instance.UpdateBossBar(HitPoints);
         if (HitPoints <= 0 && alive)
         {
+            audioSource.PlayOneShot(diesnd);
             Door.GetComponent<ButtonDoor>().AddButton();
             alive = false;
             rotratechange /= 20f;
