@@ -26,8 +26,17 @@ public class GameManager : MonoBehaviour {
     public GameObject BossName;
     public GameObject BossHealthBar;
 
+    AudioSource audioSource;
+    public AudioClip level1mus;
+    public AudioClip robbitbossmus;
+    public AudioClip level2mus;
+    public AudioClip dronebossmus;
+    public AudioClip partymus;
+    public AudioClip successsnd;
+    int currentclip;
 	private void Awake()
 	{
+       
         // Is singleton
         if (instance==null) {
             instance = this;
@@ -38,6 +47,8 @@ public class GameManager : MonoBehaviour {
 
         DontDestroyOnLoad(gameObject);
         deaths = 0;
+        currentclip = -1;
+
         Player = GameObject.FindGameObjectWithTag("Player");
         Vector3 startpos = Player.transform.position;
         startpos[0] = startx;
@@ -47,6 +58,9 @@ public class GameManager : MonoBehaviour {
         friends = 0;
         //FriendList = new List<GameObject>();
         FriendInds = new List<int>();
+        audioSource = GetComponent<AudioSource>();
+        SetMusic(0);
+        //Debug.Log(audioSource);
         DoSetup();
 	}
 
@@ -169,12 +183,60 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public IEnumerator DeadBossNextMusic(AudioSource bosssnd, int nextmus) {
+        SetMusic(-1);
+        float timepassed = 0f;
+        while (bosssnd.isPlaying && timepassed<10) {
+            timepassed += Time.deltaTime;
+            yield return null;
+        }
+        audioSource.PlayOneShot(successsnd);
+        timepassed = 0f;
+        while (audioSource.isPlaying && timepassed < 10)
+        {
+            timepassed += Time.deltaTime;
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.5f);
+        SetMusic(nextmus);
+    }
+
+    public void SetMusic(int track) {
+        if (track == currentclip) { return; }
+        switch (track) {
+            default:
+            case -1:
+                audioSource.clip = null;
+                audioSource.Stop();
+                Debug.Log("Stopping music?");
+                return;
+            case 0:
+                audioSource.clip = level1mus;
+                break;
+            case 1:
+                audioSource.clip = robbitbossmus;
+                break;
+            case 2:
+                audioSource.clip = level2mus;
+                break;
+            case 3:
+                audioSource.clip = dronebossmus;
+                break;
+            case 4:
+                audioSource.clip = partymus;
+                break;
+        }
+        currentclip = track;
+        Debug.Log("play mus?");
+        audioSource.Play();
+    }
+
 	private void Update()
 	{
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetButton("Cancel"))
         {
             quithold += Time.deltaTime;
-            //Debug.Log(quithold);
+            Debug.Log(quithold);
             if (quithold > 2)
             {
                 //Debug.Log("Quit?");
@@ -185,6 +247,7 @@ public class GameManager : MonoBehaviour {
         {
             quithold = 0;
         }
+        //if ()
 	}
 
 }

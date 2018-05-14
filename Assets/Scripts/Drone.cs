@@ -86,6 +86,7 @@ public class Drone : MonoBehaviour {
                 {
                     audioSource.PlayOneShot(awakensnd);
                     GameManager.instance.ActivateBossBar("THE SLIMELORD", HitPoints);
+                    GameManager.instance.SetMusic(3);
                     active = true;
                 }
                 return;
@@ -246,6 +247,7 @@ public class Drone : MonoBehaviour {
         GameManager.instance.UpdateBossBar(HitPoints);
         if (HitPoints <= 0 && alive)
         {
+            
             audioSource.PlayOneShot(diesnd);
             Door.GetComponent<ButtonDoor>().AddButton();
             alive = false;
@@ -262,6 +264,7 @@ public class Drone : MonoBehaviour {
                 dmgr.Damage = 0;
             }
             //Door.GetComponent<ButtonDoor>().AddButton(1);
+            StartCoroutine(GameManager.instance.DeadBossNextMusic(audioSource, 2));
         }
     }
 

@@ -524,6 +524,9 @@ MonoBehaviour:
   JumpHeight: 5
   Damage: 2
   torque: 200
+  awakesnd: {fileID: 0}
+  hopsnd: {fileID: 0}
+  diesnd: {fileID: 0}
 --- !u!137 &137282142414400776
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

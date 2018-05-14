@@ -18,8 +18,8 @@ public class Robot : MonoBehaviour {
     Rigidbody rb;
     public GameObject Door;
     AudioSource audioSource;
-    public AudioClip awakensnd;
-    public AudioClip attacksnd;
+    //public AudioClip awakensnd;
+    //public AudioClip attacksnd;
     public AudioClip diesnd;
 	// Use this for initialization
 	void Start () {
@@ -47,7 +47,8 @@ public class Robot : MonoBehaviour {
             if (Mathf.Abs(Player.transform.position.x-transform.position.x)<10) {
                 active = true;
                 GameManager.instance.ActivateBossBar("MECHA NIMBY",HitPoints);
-                audioSource.PlayOneShot(awakensnd);
+                GameManager.instance.SetMusic(1);
+                //audioSource.PlayOneShot(awakensnd);
             }
             else {
                 return;
@@ -70,7 +71,7 @@ public class Robot : MonoBehaviour {
             {
                 animator.SetTrigger("Attack2");
             }
-            audioSource.PlayOneShot(attacksnd);
+            //audioSource.PlayOneShot(attacksnd);
         }
         else {
             animator.SetBool("Forward", true);
@@ -93,6 +94,7 @@ public class Robot : MonoBehaviour {
                 dmgr.active = false;
             }
             Door.GetComponent<ButtonDoor>().AddButton(1);
+            StartCoroutine(GameManager.instance.DeadBossNextMusic(audioSource,2));
         }
     }
 }

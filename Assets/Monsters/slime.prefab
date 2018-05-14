@@ -634,9 +634,18 @@ MonoBehaviour:
   JumpHeight: 5
   Damage: 2
   torque: 200
-  awakesnd: {fileID: 8300000, guid: a3d1e84dfe7134801985726e3d4c9d3b, type: 3}
-  hopsnd: {fileID: 8300000, guid: 199ebc2ba5a6245ea882440cf7e059ef, type: 3}
-  diesnd: {fileID: 8300000, guid: 5f337f764574c4f62825fa2a4d55586b, type: 3}
+  awakesnd:
+  - {fileID: 8300000, guid: d954d27a40b1d4df5bd1a13968da9d9d, type: 3}
+  - {fileID: 8300000, guid: 0afe422b1b0b041f9a73a355fea03613, type: 3}
+  - {fileID: 8300000, guid: 03402d4d03a5949a99a238b350dd38bb, type: 3}
+  injuresnd:
+  - {fileID: 8300000, guid: 7f69221d89c7a453fa10fe5c742f52b5, type: 3}
+  - {fileID: 8300000, guid: 1d8533a1e63704b0f90da8590ffe577c, type: 3}
+  - {fileID: 8300000, guid: 42983743ddd8e4bdd886d0bafbe88369, type: 3}
+  diesnd:
+  - {fileID: 8300000, guid: a3ae269cc7a0f46619188cd9fa85e7e6, type: 3}
+  - {fileID: 8300000, guid: d742e269e85e64596bb7ee5b7d76da9a, type: 3}
+  - {fileID: 8300000, guid: 673ea9d7a657240eeb3a7c614918947c, type: 3}
 --- !u!137 &137670298221386236
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

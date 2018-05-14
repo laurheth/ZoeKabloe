@@ -32,7 +32,7 @@ public class StartMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKey(KeyCode.Escape)) {
+        if (Input.GetButton("Cancel")) {
             quithold += Time.deltaTime;
             if (quithold>2) {
                 Application.Quit();

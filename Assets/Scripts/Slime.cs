@@ -27,9 +27,10 @@ public class Slime : MonoBehaviour {
     bool awakened;
 
     AudioSource audioSource;
-    public AudioClip awakesnd;
-    public AudioClip hopsnd;
-    public AudioClip diesnd;
+    public AudioClip[] awakesnd;
+    //public AudioClip hopsnd;
+    public AudioClip[] injuresnd;
+    public AudioClip[] diesnd;
 
     //bool visible;
     //bool isactive;
@@ -87,7 +88,8 @@ public class Slime : MonoBehaviour {
         }
         else {
             if (!awakened) {
-                audioSource.PlayOneShot(awakesnd);
+                //audioSource.PlayOneShot(awakesnd);
+                audioSource.PlayOneShot(awakesnd[Mathf.RoundToInt(Random.Range(0, awakesnd.Length))]);
             }
             invisibletime = 0f;
             awakened = true;
@@ -134,7 +136,7 @@ public class Slime : MonoBehaviour {
     void Jump() {
         animator.SetTrigger("Jump");
         rb.AddForce((Vector3.up + transform.forward) * JumpHeight, ForceMode.VelocityChange);
-        audioSource.PlayOneShot(hopsnd);
+        //audioSource.PlayOneShot(hopsnd);
     }
 
 	protected void OnCollisionEnter(Collision collision)
@@ -153,11 +155,14 @@ public class Slime : MonoBehaviour {
     public void GetHit(int dmg)
     {
         HitPoints -= dmg;
+        if (HitPoints>0) {
+            audioSource.PlayOneShot(injuresnd[Mathf.RoundToInt(Random.Range(0, injuresnd.Length))]);
+        }
     }
 
     IEnumerator Die() {
         //GetComponent<ParticleSystem>().Play();
-        audioSource.PlayOneShot(diesnd);
+        audioSource.PlayOneShot(diesnd[Mathf.RoundToInt(Random.Range(0, diesnd.Length))]);
         Vector3 size = transform.localScale;
         if (cophat != null)
         {

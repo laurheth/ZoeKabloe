@@ -37,15 +37,19 @@ public class Zoe : MonoBehaviour {
     //bool isgrounded;
     float distToGround;
     bool jumping;
-
+    float swingtime;
+    float jumptime;
     // Sounds
     AudioSource audioSource;
     public AudioClip swingsnd;
-    public AudioClip hitsnd;
-    public AudioClip diesnd;
+    public AudioClip[] hitsnd;
+    public AudioClip[] diesnd;
+    public AudioClip[] injuresnd;
 
 	// Use this for initialization
 	void Start () {
+        swingtime = 0;
+        jumptime = 0;
         audioSource = GetComponent<AudioSource>();
         jumpspeed = 0;
         //speed2 = Speed * Speed;
@@ -68,6 +72,12 @@ public class Zoe : MonoBehaviour {
 
         distToGround = coll.bounds.extents.y;
         GameManager.instance.UpdateHP(HitPoints, MaxHitPoints);
+        if (transform.position.x<-8) {
+            GameManager.instance.SetMusic(0);
+        }
+        else {
+            GameManager.instance.SetMusic(2);
+        }
 	}
 
     bool IsGrounded() {
@@ -80,8 +90,13 @@ public class Zoe : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        //if (transform.position.x)
         //jumping = false;
         //float rotation;
+        swingtime += Time.deltaTime;
+        jumptime += Time.deltaTime;
+
+
         if (HitPoints <= 0) { return; }
         if (transform.position.y < -20) { GetHit(1000); }
         if (rb.velocity.magnitude>maxspeed) {
@@ -135,8 +150,9 @@ public class Zoe : MonoBehaviour {
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.X) && (IsGrounded() || doublejump > 0))
+        if (Input.GetButtonDown("Jump") && (IsGrounded() || doublejump > 0) && jumptime>0.2f)
         {
+            jumptime = 0f;
             doublejump--;
             anim.SetTrigger("JumpButton");
             //Debug.Log("JumpButton");
@@ -171,7 +187,8 @@ public class Zoe : MonoBehaviour {
             anim.SetFloat("Forward", 0f);
         }
 
-        if (Input.GetKeyDown(KeyCode.Z) && !anim.GetCurrentAnimatorStateInfo(0).IsName("Swing")) {
+        if (Input.GetButtonDown("Fire1") && !anim.GetCurrentAnimatorStateInfo(0).IsName("Swing") && swingtime>0.2f) {
+            swingtime = 0f;
             anim.SetTrigger("SwingButton");
             //HitInFront();
             //Debug.Log("SwingButton");
@@ -220,6 +237,7 @@ public class Zoe : MonoBehaviour {
                 transform.position = new Vector3(197, 0, -5);
                 GameManager.instance.CheckRescued();
                 StartCoroutine(GameManager.instance.RunEpilogue());
+                GameManager.instance.SetMusic(4);
             }
         }
         /*if (Vector3.Dot(collision.contacts[0].normal,Vector3.up)<0) {
@@ -255,7 +273,7 @@ public class Zoe : MonoBehaviour {
         }
         if (hitsomething)
         {
-            audioSource.PlayOneShot(hitsnd);
+            audioSource.PlayOneShot(hitsnd[Mathf.RoundToInt(Random.Range(0,hitsnd.Length))]);
         }
         else
         {
@@ -272,11 +290,14 @@ public class Zoe : MonoBehaviour {
         StartCoroutine(DamageFlash());
         if (HitPoints <= 0)
         {
-            audioSource.PlayOneShot(diesnd);
+            audioSource.PlayOneShot(diesnd[Mathf.RoundToInt(Random.Range(0, diesnd.Length))]);
             rb.constraints = RigidbodyConstraints.None;
             anim.SetFloat("Forward", 0f);
             rb.AddTorque(new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), Random.Range(-3, 3)), ForceMode.VelocityChange);
             StartCoroutine(Die());
+        }
+        else {
+            audioSource.PlayOneShot(injuresnd[Mathf.RoundToInt(Random.Range(0, injuresnd.Length))]);
         }
     }
 

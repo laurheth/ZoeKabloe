@@ -6,12 +6,17 @@ public class Friend : MonoBehaviour {
     public int FriendIndex;
     public bool isfree;
     float time;
+    GameObject Player;
     Animator animator;
     Rigidbody rb;
     AudioSource audioSource;
+    bool distressconveyed;
     public AudioClip freesound;
+    public AudioClip[] sadsnd;
 	// Use this for initialization
 	void Start () {
+        Player = GameObject.FindGameObjectWithTag("Player");
+        distressconveyed = false;
         audioSource = GetComponent<AudioSource>();
         time = 0f;
         isfree = false;
@@ -25,6 +30,10 @@ public class Friend : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (!isfree) {
+            if (!distressconveyed && Mathf.Abs(Player.transform.position.x-transform.position.x)<5) {
+                audioSource.PlayOneShot(sadsnd[Mathf.RoundToInt(Random.Range(0, sadsnd.Length))]);
+                distressconveyed = true;
+            }
             return;
         }
         time += Time.deltaTime;
