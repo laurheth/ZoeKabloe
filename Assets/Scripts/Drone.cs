@@ -99,7 +99,7 @@ public class Drone : MonoBehaviour {
             horizpos[1] = 0;
             Driver.transform.rotation = Quaternion.LookRotation(horizpos);
 
-            //if (horizpos.magnitude < 5) { targetpos -= Vector3.up * 4; }
+            if (horizpos.magnitude < 5) { targetpos -= Vector3.up * 4; }
 
             if (targetpos[0] < XLimits[0]) { targetpos[0] = XLimits[0]; horizpos[0] = XLimits[0]; }
             if (targetpos[0] > XLimits[1]) { targetpos[0] = XLimits[1]; horizpos[0] = XLimits[1]; }
@@ -222,6 +222,9 @@ public class Drone : MonoBehaviour {
             {
                 mainrb.AddForceAtPosition(transform.up * Mathf.Max(0,rotrates[i]) * forceperrot, transform.position + transform.rotation * pos[i]);
             }
+        }
+        if (transform.position.z<-6) {
+            mainrb.MovePosition(new Vector3(mainrb.position.x, mainrb.position.y, -6));
         }
 	}
 
